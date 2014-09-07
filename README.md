@@ -1,7 +1,7 @@
 solr-thymeleaf-responsewriter
 ==================
 
-![travis ci build status](https://travis-ci.org/shopping24/solr-jdbc-synonyms.png)
+![travis ci build status](https://travis-ci.org/shopping24/solr-thymeleaf.png)
 
 
 ## License
