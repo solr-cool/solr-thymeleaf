@@ -31,8 +31,13 @@ public class ThymeleafResponseWriter implements QueryResponseWriter, SolrCoreAwa
    private TemplateEngine templateEngine;
    private FileTemplateResolver templateResolver;
    private Locale locale = Locale.getDefault();
+   private SolrParams configuration;
    private SolrCore core;
 
+   /**
+    * This get's called as soon the core is ready, which is after the
+    * {@linkplain #init(NamedList)} method below.
+    */
    @Override
    public void inform(SolrCore core) {
       this.core = core;
@@ -44,14 +49,12 @@ public class ThymeleafResponseWriter implements QueryResponseWriter, SolrCoreAwa
    @Override
    public void init(@SuppressWarnings("rawtypes") NamedList args) {
       Preconditions.checkNotNull(args);
-      SolrParams configuration = SolrParams.toSolrParams(args);
+      this.configuration = SolrParams.toSolrParams(args);
 
       // configure template resolver
       templateResolver = new FileTemplateResolver();
       templateResolver.setCharacterEncoding("utf-8");
       templateResolver.setTemplateMode(configuration.get("tl.templateMode", "XHTML"));
-      templateResolver.setPrefix(configuration.get("tl.prefix", core.getSolrConfig().getResourceLoader().getConfigDir()
-            + "/templates/"));
       templateResolver.setSuffix(configuration.get("tl.suffix", ".html"));
 
       if (configuration.get("tl.cacheTtlMs") != null) {
@@ -63,10 +66,22 @@ public class ThymeleafResponseWriter implements QueryResponseWriter, SolrCoreAwa
       if (configuration.get("tl.locale") != null) {
          locale = Locale.forLanguageTag(configuration.get("tl.locale"));
       }
+   }
 
-      // create eninge
-      templateEngine = new TemplateEngine();
-      templateEngine.setTemplateResolver(templateResolver);
+   protected TemplateEngine getEngine() {
+      // create engine
+      if (templateEngine == null) {
+
+         // use solr core here
+         templateResolver.setPrefix(configuration.get("tl.prefix",
+               core.getSolrConfig().getResourceLoader().getConfigDir()
+                     + "/templates/"));
+
+         templateEngine = new TemplateEngine();
+         templateEngine.setTemplateResolver(templateResolver);
+      }
+
+      return templateEngine;
    }
 
    @Override
@@ -76,19 +91,20 @@ public class ThymeleafResponseWriter implements QueryResponseWriter, SolrCoreAwa
       Preconditions.checkNotNull(response);
 
       // get template name from request params
-      String templateName = request.getParams().get("tl.templateName");
-      Preconditions.checkNotNull(templateName, "No tl.templateName given");
+      String templateName = request.getParams().get("tl.template");
+      Preconditions.checkNotNull(templateName, "No tl.template given");
 
       // Prefill context with some defaults
       Context context = new Context(locale);
       context.setVariable("request", request);
+      context.setVariable("params", request.getParams());
 
       SolrResponse rsp = new QueryResponse();
       NamedList<Object> parsedResponse = BinaryResponseWriter.getParsedResponse(request, response);
       rsp.setResponse(parsedResponse);
       context.setVariable("response", rsp);
 
-      templateEngine.process(templateName, context, writer);
+      getEngine().process(templateName, context, writer);
    }
 
    @Override
