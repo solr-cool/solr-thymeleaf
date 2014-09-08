@@ -68,6 +68,10 @@ public class ThymeleafResponseWriter implements QueryResponseWriter, SolrCoreAwa
       }
    }
 
+   /**
+    * 
+    * @return
+    */
    protected TemplateEngine getEngine() {
       // create engine
       if (templateEngine == null) {
