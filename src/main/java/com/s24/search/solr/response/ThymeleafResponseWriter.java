@@ -5,6 +5,8 @@ import java.io.Writer;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import nz.net.ultraq.thymeleaf.LayoutDialect;
+
 import org.apache.solr.client.solrj.SolrResponse;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.params.SolrParams;
@@ -30,6 +32,7 @@ public class ThymeleafResponseWriter implements QueryResponseWriter, SolrCoreAwa
 
    private TemplateEngine templateEngine;
    private FileTemplateResolver templateResolver;
+   private LayoutDialect layoutDialect;
    private Locale locale = Locale.getDefault();
    private SolrParams configuration;
    private SolrCore core;
@@ -66,6 +69,8 @@ public class ThymeleafResponseWriter implements QueryResponseWriter, SolrCoreAwa
       if (configuration.get("tl.locale") != null) {
          locale = Locale.forLanguageTag(configuration.get("tl.locale"));
       }
+      
+      layoutDialect = new LayoutDialect();
    }
 
    /**
@@ -83,6 +88,7 @@ public class ThymeleafResponseWriter implements QueryResponseWriter, SolrCoreAwa
 
          templateEngine = new TemplateEngine();
          templateEngine.setTemplateResolver(templateResolver);
+         templateEngine.addDialect(layoutDialect);
       }
 
       return templateEngine;
