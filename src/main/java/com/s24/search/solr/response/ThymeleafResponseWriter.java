@@ -86,9 +86,14 @@ public class ThymeleafResponseWriter implements QueryResponseWriter, SolrCoreAwa
                core.getSolrConfig().getResourceLoader().getConfigDir()
                      + "/templates/"));
 
-         templateEngine = new TemplateEngine();
-         templateEngine.setTemplateResolver(templateResolver);
-         templateEngine.addDialect(layoutDialect);
+         TemplateEngine te = new TemplateEngine();
+         te.setTemplateResolver(templateResolver);
+         te.addDialect(layoutDialect);
+         
+         // check race condition, avoid synchronized block
+         if (templateEngine == null) {
+            templateEngine = te;
+         }
       }
 
       return templateEngine;
