@@ -3,6 +3,8 @@ package com.s24.search.solr.response;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Locale;
+import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 import nz.net.ultraq.thymeleaf.LayoutDialect;
@@ -113,6 +115,14 @@ public class ThymeleafResponseWriter implements QueryResponseWriter, SolrCoreAwa
       Context context = new Context(locale);
       context.setVariable("request", request);
       context.setVariable("params", request.getParams());
+      
+      // add core properties
+      Properties coreProperties = request.getCore().getResourceLoader().getCoreProperties();
+      if (coreProperties != null) {
+         for (Entry<Object, Object> p : coreProperties.entrySet()) {
+            context.setVariable(p.getKey().toString().replace('.', '_'), p.getValue());
+         }
+      }
 
       SolrResponse rsp = new QueryResponse();
       NamedList<Object> parsedResponse = BinaryResponseWriter.getParsedResponse(request, response);
