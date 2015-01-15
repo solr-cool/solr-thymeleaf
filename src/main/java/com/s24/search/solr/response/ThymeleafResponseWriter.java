@@ -7,6 +7,8 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
+import javax.servlet.http.HttpServletRequest;
+
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 
 import org.apache.solr.client.solrj.SolrResponse;
@@ -20,7 +22,9 @@ import org.apache.solr.response.QueryResponseWriter;
 import org.apache.solr.response.SolrQueryResponse;
 import org.apache.solr.util.plugin.SolrCoreAware;
 import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.AbstractContext;
 import org.thymeleaf.context.Context;
+import org.thymeleaf.context.WebContext;
 import org.thymeleaf.templateresolver.FileTemplateResolver;
 
 import com.google.common.base.Preconditions;
@@ -71,7 +75,7 @@ public class ThymeleafResponseWriter implements QueryResponseWriter, SolrCoreAwa
       if (configuration.get("tl.locale") != null) {
          locale = Locale.forLanguageTag(configuration.get("tl.locale"));
       }
-      
+
       layoutDialect = new LayoutDialect();
    }
 
@@ -91,7 +95,7 @@ public class ThymeleafResponseWriter implements QueryResponseWriter, SolrCoreAwa
          TemplateEngine te = new TemplateEngine();
          te.setTemplateResolver(templateResolver);
          te.addDialect(layoutDialect);
-         
+
          // check race condition, avoid synchronized block
          if (templateEngine == null) {
             templateEngine = te;
@@ -111,11 +115,27 @@ public class ThymeleafResponseWriter implements QueryResponseWriter, SolrCoreAwa
       String templateName = request.getParams().get("tl.template");
       Preconditions.checkNotNull(templateName, "No tl.template given");
 
+      AbstractContext context = null;
+
+      // requestDispatcher/requestParsers/@addHttpRequestToContext is enabled,
+      // use webcontext
+      if (request.getContext().containsKey("httpRequest")) {
+         HttpServletRequest httpServletRequest = (HttpServletRequest) request.getContext().get("httpRequest");
+         context = new WebContext(
+               httpServletRequest, 
+               null, 
+               httpServletRequest.getServletContext(), 
+               locale);
+      } else {
+         // if the http request does not reside inside the solr context, proceed
+         // with best-effort
+         context = new Context(locale);
+      }
+
       // Prefill context with some defaults
-      Context context = new Context(locale);
       context.setVariable("request", request);
-      context.setVariable("params", request.getParams());
-      
+      context.setVariable("params", SolrParams.toMap(request.getParams().toNamedList()));
+
       // add core properties
       Properties coreProperties = request.getCore().getResourceLoader().getCoreProperties();
       if (coreProperties != null) {
