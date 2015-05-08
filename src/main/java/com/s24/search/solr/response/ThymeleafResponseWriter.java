@@ -1,5 +1,7 @@
 package com.s24.search.solr.response;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Locale;
@@ -25,9 +27,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.AbstractContext;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.context.WebContext;
-import org.thymeleaf.templateresolver.FileTemplateResolver;
-
-import com.google.common.base.Preconditions;
+import org.thymeleaf.templateresolver.TemplateResolver;
 
 /**
  * A response writer utilizing the Thymeleaf template engine.
@@ -35,13 +35,12 @@ import com.google.common.base.Preconditions;
  * @author Shopping24 GmbH, Torsten Bøgh Köster (@tboeghk)
  */
 public class ThymeleafResponseWriter implements QueryResponseWriter, SolrCoreAware {
-
+   private final SolrResourceResolver resourceResolver = new SolrResourceResolver();
    private TemplateEngine templateEngine;
-   private FileTemplateResolver templateResolver;
+   private TemplateResolver templateResolver;
    private LayoutDialect layoutDialect;
    private Locale locale = Locale.getDefault();
    private SolrParams configuration;
-   private SolrCore core;
 
    /**
     * This get's called as soon the core is ready, which is after the
@@ -49,7 +48,7 @@ public class ThymeleafResponseWriter implements QueryResponseWriter, SolrCoreAwa
     */
    @Override
    public void inform(SolrCore core) {
-      this.core = core;
+      this.resourceResolver.setLoader(checkNotNull(core).getResourceLoader());
    }
 
    /**
@@ -57,11 +56,12 @@ public class ThymeleafResponseWriter implements QueryResponseWriter, SolrCoreAwa
     */
    @Override
    public void init(@SuppressWarnings("rawtypes") NamedList args) {
-      Preconditions.checkNotNull(args);
+      checkNotNull(args);
       this.configuration = SolrParams.toSolrParams(args);
 
       // configure template resolver
-      templateResolver = new FileTemplateResolver();
+      templateResolver = new TemplateResolver();
+      templateResolver.setResourceResolver(resourceResolver);
       templateResolver.setCharacterEncoding("utf-8");
       templateResolver.setTemplateMode(configuration.get("tl.templateMode", "XHTML"));
       templateResolver.setSuffix(configuration.get("tl.suffix", ".html"));
@@ -79,18 +79,11 @@ public class ThymeleafResponseWriter implements QueryResponseWriter, SolrCoreAwa
       layoutDialect = new LayoutDialect();
    }
 
-   /**
-    * 
-    * @return
-    */
    protected TemplateEngine getEngine() {
       // create engine
       if (templateEngine == null) {
-
          // use solr core here
-         templateResolver.setPrefix(configuration.get("tl.prefix",
-               core.getSolrConfig().getResourceLoader().getConfigDir()
-                     + "/templates/"));
+         templateResolver.setPrefix(configuration.get("tl.prefix", "templates/"));
 
          TemplateEngine te = new TemplateEngine();
          te.setTemplateResolver(templateResolver);
@@ -107,18 +100,17 @@ public class ThymeleafResponseWriter implements QueryResponseWriter, SolrCoreAwa
 
    @Override
    public void write(Writer writer, SolrQueryRequest request, SolrQueryResponse response) throws IOException {
-      Preconditions.checkNotNull(writer);
-      Preconditions.checkNotNull(request);
-      Preconditions.checkNotNull(response);
+      checkNotNull(writer);
+      checkNotNull(request);
+      checkNotNull(response);
 
       // get template name from request params
       String templateName = request.getParams().get("tl.template");
-      Preconditions.checkNotNull(templateName, "No tl.template given");
+      checkNotNull(templateName, "No tl.template given");
 
-      AbstractContext context = null;
+      AbstractContext context;
 
-      // requestDispatcher/requestParsers/@addHttpRequestToContext is enabled,
-      // use webcontext
+      // requestDispatcher/requestParsers/@addHttpRequestToContext is enabled, use webcontext
       if (request.getContext().containsKey("httpRequest")) {
          HttpServletRequest httpServletRequest = (HttpServletRequest) request.getContext().get("httpRequest");
          context = new WebContext(
@@ -127,8 +119,7 @@ public class ThymeleafResponseWriter implements QueryResponseWriter, SolrCoreAwa
                httpServletRequest.getServletContext(), 
                locale);
       } else {
-         // if the http request does not reside inside the solr context, proceed
-         // with best-effort
+         // if the http request does not reside inside the solr context, proceed with best-effort
          context = new Context(locale);
       }
 
@@ -154,9 +145,8 @@ public class ThymeleafResponseWriter implements QueryResponseWriter, SolrCoreAwa
 
    @Override
    public String getContentType(SolrQueryRequest request, SolrQueryResponse response) {
-      Preconditions.checkNotNull(request);
+      checkNotNull(request);
 
       return request.getParams().get("tl.contentType", "text/html;charset=UTF-8");
    }
-
 }
