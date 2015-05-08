@@ -39,9 +39,6 @@ mvn -P release
 log "commiting the new version $NEXT_VERSION"
 git commit -a -m "pushes to release version $NEXT_VERSION"
 
-# log "Deploying to server ..."
-# ansible-playbook src/main/deployment/deploy-seasupport.yml
-
 log "creating tag v$NEXT_VERSION"
 git tag -a v$NEXT_VERSION -m "`curl -s http://whatthecommit.com/index.txt`"
 
