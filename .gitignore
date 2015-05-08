@@ -9,4 +9,6 @@ hs_err_pid*
 .classpath
 .project
 .DS_Store
-/target/
+target
+.idea
+*.iml
