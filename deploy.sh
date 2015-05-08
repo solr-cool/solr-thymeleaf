@@ -34,7 +34,7 @@ log "Increasing version number to $NEXT_VERSION"
 mvn org.codehaus.mojo:versions-maven-plugin:2.0:set -DgenerateBackupPoms=false -DnewVersion=$NEXT_VERSION
 
 log "Building the release"
-mvn clean install
+mvn -P release
 
 log "commiting the new version $NEXT_VERSION"
 git commit -a -m "pushes to release version $NEXT_VERSION"
