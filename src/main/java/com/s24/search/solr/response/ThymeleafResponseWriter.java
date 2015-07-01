@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
 
 import nz.net.ultraq.thymeleaf.LayoutDialect;
+import ognl.OgnlRuntime;
 
 import org.apache.solr.client.solrj.SolrResponse;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -27,6 +28,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.AbstractContext;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.context.WebContext;
+import org.thymeleaf.exceptions.TemplateProcessingException;
 import org.thymeleaf.templateresolver.TemplateResolver;
 
 /**
@@ -35,6 +37,15 @@ import org.thymeleaf.templateresolver.TemplateResolver;
  * @author Shopping24 GmbH, Torsten Bøgh Köster (@tboeghk)
  */
 public class ThymeleafResponseWriter implements QueryResponseWriter, SolrCoreAware {
+   static {
+      try {
+         OgnlRuntime.setPropertyAccessor(NamedList.class, new NamedListPropertyAccessor());
+      } catch (final Exception e) {
+         // We will not ignore this: there's a problem creating an instance of the new property accessor!
+         throw new TemplateProcessingException("Exception while configuring OGNL named list property accessor", e);
+      }
+   }
+
    private final SolrResourceResolver resourceResolver = new SolrResourceResolver();
    private TemplateEngine templateEngine;
    private TemplateResolver templateResolver;
