@@ -32,9 +32,11 @@ public class NamedListPropertyAccessor implements PropertyAccessor {
          if (idx >= 0) {
             // Key exists -> replace value.
             namedList.setVal(idx, value);
+            return;
          } else {
             // Key does not exist -> add key / value.
             namedList.add((String) name, value);
+            return;
          }
       }
 
