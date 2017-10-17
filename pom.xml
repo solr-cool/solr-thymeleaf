@@ -4,7 +4,7 @@
    <groupId>com.s24.search.solr</groupId>
    <artifactId>solr-thymeleaf</artifactId>
    <name>solr-thymeleaf</name>
-   <version>0.9.8</version>
+   <version>0.9.9-SNAPSHOT</version>
    <description>A Solr response writer using the Thymeleaf templating engine</description>
    <url>https://github.com/shopping24/solr-thymeleaf</url>
    <licenses>
