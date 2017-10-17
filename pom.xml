@@ -4,7 +4,7 @@
    <groupId>com.s24.search.solr</groupId>
    <artifactId>solr-thymeleaf</artifactId>
    <name>solr-thymeleaf</name>
-   <version>0.9.8-SNAPSHOT</version>
+   <version>0.9.8</version>
    <description>A Solr response writer using the Thymeleaf templating engine</description>
    <url>https://github.com/shopping24/solr-thymeleaf</url>
    <licenses>
@@ -226,7 +226,7 @@
                            <goal>sign</goal>
                         </goals>
                         <configuration>
-                           <executable>gpg2</executable>
+                           <executable>gpg</executable>
                            <keyname>F87FE068</keyname>
                         </configuration>
                      </execution>
