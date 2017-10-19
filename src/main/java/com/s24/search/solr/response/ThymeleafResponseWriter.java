@@ -62,7 +62,9 @@ public class ThymeleafResponseWriter implements QueryResponseWriter, SolrCoreAwa
       this.resourceResolver.setLoader(checkNotNull(core).getResourceLoader());
 
       // Clear all cached templates. There could be a new one and should be loaded on collection reload.
-      templateEngine.clearTemplateCache();
+      if (templateEngine != null) {
+         templateEngine.clearTemplateCache();
+      }
    }
 
    /**
