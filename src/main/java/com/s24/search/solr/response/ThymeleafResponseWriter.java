@@ -60,6 +60,9 @@ public class ThymeleafResponseWriter implements QueryResponseWriter, SolrCoreAwa
    @Override
    public void inform(SolrCore core) {
       this.resourceResolver.setLoader(checkNotNull(core).getResourceLoader());
+
+      // Clear all cached templates. There could be a new one and should be loaded on collection reload.
+      templateEngine.clearTemplateCache();
    }
 
    /**
@@ -118,6 +121,11 @@ public class ThymeleafResponseWriter implements QueryResponseWriter, SolrCoreAwa
       // get template name from request params
       String templateName = request.getParams().get("tl.template");
       checkNotNull(templateName, "No tl.template given");
+
+      // When changing the templates we want a cleared cache
+      if(request.getParams().getBool("tl.clearCache", false)){
+         templateEngine.clearTemplateCache();
+      }
 
       AbstractContext context;
 
