@@ -227,7 +227,6 @@
                         </goals>
                         <configuration>
                            <executable>gpg</executable>
-                           <keyname>F87FE068</keyname>
                         </configuration>
                      </execution>
                   </executions>
