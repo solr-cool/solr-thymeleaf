@@ -3,7 +3,7 @@
    <groupId>com.s24.search.solr</groupId>
    <artifactId>solr-thymeleaf</artifactId>
    <name>solr-thymeleaf</name>
-   <version>1.0.2-SNAPSHOT</version>
+   <version>1.0.2</version>
    <description>A Solr response writer using the Thymeleaf templating engine</description>
    <url>https://github.com/shopping24/solr-thymeleaf</url>
 
@@ -19,7 +19,7 @@
       <connection>scm:git:git@github.com:shopping24/solr-thymeleaf.git</connection>
       <developerConnection>scm:git:git@github.com:shopping24/solr-thymeleaf.git</developerConnection>
       <url>https://github.com/shopping24/solr-thymeleaf</url>
-      <tag>HEAD</tag>
+      <tag>solr-thymeleaf-1.0.2</tag>
    </scm>
 
     <issueManagement>
