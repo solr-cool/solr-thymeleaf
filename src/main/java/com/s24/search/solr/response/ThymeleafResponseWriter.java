@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
-import javax.servlet.http.HttpServletRequest;
 
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 import ognl.OgnlRuntime;
@@ -24,7 +23,6 @@ import org.apache.solr.util.plugin.SolrCoreAware;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.AbstractContext;
 import org.thymeleaf.context.Context;
-import org.thymeleaf.context.WebContext;
 import org.thymeleaf.exceptions.TemplateProcessingException;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -85,23 +83,8 @@ public class ThymeleafResponseWriter
             templateEngine.clearTemplateCache();
         }
 
-        AbstractContext context;
-
-        // requestDispatcher/requestParsers/@addHttpRequestToContext is enabled, use webcontext
-        if (request.getContext().containsKey("httpRequest")) {
-            HttpServletRequest httpServletRequest = (HttpServletRequest) request.getContext().get("httpRequest");
-            context = new WebContext(
-                httpServletRequest,
-                null,
-                httpServletRequest.getServletContext(),
-                locale
-            );
-        } else {
-            // if the http request does not reside inside the solr context, proceed with best-effort
-            context = new Context(locale);
-        }
-
         // Prefill context with some defaults
+        AbstractContext context = new Context(locale);
         context.setVariable("request", request);
         context.setVariable("params", toMap(request.getParams().toNamedList()));
 
