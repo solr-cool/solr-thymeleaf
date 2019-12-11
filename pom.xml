@@ -82,6 +82,11 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <systemPropertyVariables>
+                        <java.security.egd>file:/dev/./urandom</java.security.egd>
+                    </systemPropertyVariables>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
