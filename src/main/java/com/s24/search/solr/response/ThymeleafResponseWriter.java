@@ -62,7 +62,7 @@ public class ThymeleafResponseWriter
      */
     @Override
     public void inform(SolrCore core) {
-        templateResolver = new LuceneTemplateResolver(core.getResourceLoader());
+        templateResolver.setResourceLoader(core.getResourceLoader());
 
         // Clear all cached templates. There could be a new one and should be loaded on collection reload.
         if (templateEngine != null) {
@@ -161,6 +161,7 @@ public class ThymeleafResponseWriter
         configuration = args.toSolrParams();
 
         // configure template resolver
+        templateResolver = new LuceneTemplateResolver();
         templateResolver.setCharacterEncoding("utf-8");
         templateResolver.setTemplateMode(configuration.get("tl.templateMode", "XHTML"));
         templateResolver.setSuffix(configuration.get("tl.suffix", ".html"));

@@ -20,7 +20,9 @@ public class LuceneTemplateResolverIT
         ResourceLoader resourceLoader = new SolrResourceLoader(testSolrHome);
 
         TemplateEngine templateEngine = new TemplateEngine();
-        templateEngine.setTemplateResolver(new LuceneTemplateResolver(resourceLoader));
+        LuceneTemplateResolver templateResolver = new LuceneTemplateResolver();
+        templateResolver.setResourceLoader(resourceLoader);
+        templateEngine.setTemplateResolver(templateResolver);
         templateEngine.getConfiguration();
 
         List<ITemplateResolver> templateResolvers = new ArrayList<>(templateEngine.getTemplateResolvers());

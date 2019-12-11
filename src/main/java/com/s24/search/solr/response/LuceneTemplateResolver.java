@@ -10,9 +10,9 @@ import org.thymeleaf.templateresource.ITemplateResource;
 public class LuceneTemplateResolver
     extends AbstractConfigurableTemplateResolver {
 
-    private final ResourceLoader resourceLoader;
+    private ResourceLoader resourceLoader;
 
-    public LuceneTemplateResolver(ResourceLoader resourceLoader) {
+    public void setResourceLoader(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
     }
 
@@ -27,4 +27,5 @@ public class LuceneTemplateResolver
     ) {
         return new LuceneTemplateResource(resourceLoader, resourceName, characterEncoding);
     }
+
 }
