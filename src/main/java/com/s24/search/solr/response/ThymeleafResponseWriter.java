@@ -152,7 +152,7 @@ public class ThymeleafResponseWriter
         // configure template resolver
         templateResolver = new LuceneTemplateResolver();
         templateResolver.setCharacterEncoding("utf-8");
-        templateResolver.setTemplateMode(configuration.get("tl.templateMode", "XHTML"));
+        templateResolver.setTemplateMode(configuration.get("tl.templateMode", "HTML"));
         templateResolver.setSuffix(configuration.get("tl.suffix", ".html"));
 
         if (configuration.get("tl.cacheTtlMs") != null) {
