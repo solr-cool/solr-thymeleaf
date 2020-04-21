@@ -1,28 +1,30 @@
 pipeline {
     agent {
-        dockerfile {
-            dir 'build'
+        docker {
+            image 'hub.s24.com/s24/openjdk-build-agent:11.0.6-5'
             args """
+                  --group-add 999
+                  --network=host
                   -v /etc/passwd:/etc/passwd
                   -v /etc/group:/etc/group
-                  -v ${JENKINS_HOME}/.m2:${JENKINS_HOME}/.m2
-                  -v ${JENKINS_HOME}/.ssh:${JENKINS_HOME}/.ssh
+                  -v ${JENKINS_HOME}/.m2:/www/jenkins-ci/.m2
+                  -v ${JENKINS_HOME}/.ssh:/www/jenkins-ci/.ssh
                   """
         }
     }
+
     options {
         ansiColor 'xterm'
-        buildDiscarder(logRotator(numToKeepStr: '30'))
+        buildDiscarder(logRotator(numToKeepStr: '30', artifactNumToKeepStr: '1'))
+        timestamps()
+        timeout(time: 30, unit: 'MINUTES')
+        disableConcurrentBuilds()
     }
+
     stages {
-        stage('Compile') {
+        stage('Build and test') {
             steps {
-                sh './mvnw -B -Dstyle.color=always -Djansi.force=true clean compile'
-            }
-        }
-        stage('Install') {
-            steps {
-                sh './mvnw -B -Dstyle.color=always -Djansi.force=true verify'
+                sh './mvnw -B -Dstyle.color=always -Djansi.force=true clean verify'
             }
             post {
                 always {
@@ -30,16 +32,13 @@ pipeline {
                 }
             }
         }
-        stage('Promotion') {
-            steps {
-                timeout(time: 1, unit: 'HOURS') {
-                    input 'Release to artifact repository?'
-                }
+
+        stage('Deploy to repository') {
+            when {
+                branch 'master'
             }
-        }
-        stage('Release') {
             steps {
-                sh "./mvnw -B -Dstyle.color=always -Djansi.force=true release:clean release:prepare release:perform"
+                sh "./mvnw -B -Dstyle.color=always -Djansi.force=true -Dmaven.resources.skip -Dmaven.main.skip -Dmaven.test.skip -DskipTests -Dmaven.package.skip deploy"
             }
         }
     }

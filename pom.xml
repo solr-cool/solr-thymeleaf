@@ -3,7 +3,7 @@
    <groupId>com.s24.search.solr</groupId>
    <artifactId>solr-thymeleaf</artifactId>
    <name>solr-thymeleaf</name>
-   <version>1.0.5-SNAPSHOT</version>
+   <version>1.0.5</version>
    <description>A Solr response writer using the Thymeleaf templating engine</description>
    <url>https://github.com/shopping24/solr-thymeleaf</url>
 
@@ -62,8 +62,16 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
