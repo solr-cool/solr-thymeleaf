@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
    <modelVersion>4.0.0</modelVersion>
-   <groupId>com.s24.search.solr</groupId>
+   <groupId>cool.solr</groupId>
    <artifactId>solr-thymeleaf</artifactId>
    <name>solr-thymeleaf</name>
-   <version>1.0.5</version>
+   <version>1.1.0</version>
    <description>A Solr response writer using the Thymeleaf templating engine</description>
-   <url>https://github.com/shopping24/solr-thymeleaf</url>
+   <url>https://github.com/solr-cool/solr-thymeleaf</url>
 
    <licenses>
       <license>
@@ -16,9 +16,9 @@
    </licenses>
 
    <scm>
-      <connection>scm:git:git@github.com:shopping24/solr-thymeleaf.git</connection>
-      <developerConnection>scm:git:git@github.com:shopping24/solr-thymeleaf.git</developerConnection>
-      <url>https://github.com/shopping24/solr-thymeleaf</url>
+      <connection>scm:git:git@github.com:solr-cool/solr-thymeleaf.git</connection>
+      <developerConnection>scm:git:git@github.com:solr-cool/solr-thymeleaf.git</developerConnection>
+      <url>https://github.com/solr-cool/solr-thymeleaf</url>
       <tag>HEAD</tag>
    </scm>
 
@@ -28,28 +28,27 @@
     </issueManagement>
 
     <organization>
-        <name>shopping24 GmbH</name>
-        <url>https://s24.com</url>
+        <name>solr.cool</name>
+        <url>https://solr.cool</url>
     </organization>
 
-    <distributionManagement>
-        <repository>
-            <id>s24-internal</id>
-            <url>https://artifactory.s24.com/artifactory/s24-release-local</url>
-        </repository>
-    </distributionManagement>
-
-    <repositories>
-        <repository>
-            <id>spring-plugins</id>
-            <url>https://repo.spring.io/plugins-release/</url>
-        </repository>
-    </repositories>
+    <developers>
+        <developer>
+            <id>tboeghk</id>
+            <name>Torsten Bøgh Köster</name>
+            <email>tbk@thiswayup.de</email>
+            <roles>
+                <role>owner</role>
+                <role>developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+    </developers>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
         <solr.version>7.4.0</solr.version>
     </properties>
 
@@ -59,19 +58,10 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.2.0</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -111,26 +101,6 @@
                         <goals>
                             <goal>single</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.0.0-M3</version>
-                <executions>
-                    <execution>
-                        <id>enforce-maven</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireMavenVersion>
-                                    <version>3.6.1</version>
-                                </requireMavenVersion>
-                            </rules>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -174,4 +144,103 @@
        </dependency>
    </dependencies>
 
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <defaultGoal>
+			      clean deploy
+			   </defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>3.2.0</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.2.0</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>de.jutzig</groupId>
+                        <artifactId>github-release-plugin</artifactId>
+                        <version>1.1.1</version>
+                        <configuration>
+                            <description>Release version ${project.version}</description>
+                            <releaseName>${project.version}</releaseName>
+                            <tag>${project.version}</tag>
+                            <fileSets>
+                                <fileSet>
+                                    <directory>${project.build.directory}</directory>
+                                    <includes>
+                                        <include>${project.artifactId}*.jar</include>
+                                        <include>${project.artifactId}*.jar.asc</include>
+                                    </includes>
+                                </fileSet>
+                            </fileSets>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                                <configuration>
+                                    <gpgArguments>
+                                        <arg>--pinentry-mode</arg>
+                                        <arg>loopback</arg>
+                                    </gpgArguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.8</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

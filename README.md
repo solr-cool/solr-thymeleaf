@@ -31,7 +31,27 @@ The template context is prefilled with the current `request`, the request `param
 
 This should install the current version into your local repository
 
-    $ ./mvnw clean verify
+    $ ./mvn clean verify
+
+### Releasing the project to maven central
+    
+Define new versions
+    
+    $ export NEXT_VERSION=<version>
+    $ export NEXT_DEVELOPMENT_VERSION=<version>-SNAPSHOT
+
+Then execute the release chain
+
+    $ mvn org.codehaus.mojo:versions-maven-plugin:2.8.1:set -DgenerateBackupPoms=false -DnewVersion=$NEXT_VERSION
+    $ git commit -a -m "pushes to release version $NEXT_VERSION"
+    $ mvn -P release
+    
+Then, increment to next development version:
+    
+    $ git tag -a v$NEXT_VERSION -m "`curl -s http://whatthecommit.com/index.txt`"
+    $ mvn org.codehaus.mojo:versions-maven-plugin:2.0:set -DgenerateBackupPoms=false -DnewVersion=$NEXT_DEVELOPMENT_VERSION
+    $ git commit -a -m "pushes to development version $NEXT_DEVELOPMENT_VERSION"
+    $ git push origin tag v$NEXT_VERSION && git push origin
     
 ## License
 
