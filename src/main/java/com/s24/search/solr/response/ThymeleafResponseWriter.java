@@ -107,7 +107,14 @@ public class ThymeleafResponseWriter
         rsp.setResponse(parsedResponse);
         context.setVariable("response", rsp);
 
+        // let subclasses add context info (if needed)
+        preProcess(context);
+
         getEngine().process(templateName, context, writer);
+    }
+
+    protected void preProcess(WebContext context) {
+        // hook to customize context, noop by default
     }
 
     private static Map<String, String> toMap(NamedList<Object> params) {
