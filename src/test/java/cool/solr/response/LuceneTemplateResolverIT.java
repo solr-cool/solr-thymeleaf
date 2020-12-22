@@ -1,4 +1,4 @@
-package com.s24.search.solr.response;
+package cool.solr.response;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ public class LuceneTemplateResolverIT
         List<ITemplateResolver> templateResolvers = new ArrayList<>(templateEngine.getTemplateResolvers());
 
         assertEquals(1, templateResolvers.size());
-        assertEquals("com.s24.search.solr.response.LuceneTemplateResolver", templateResolvers.get(0).getName());
+        assertEquals("cool.solr.response.LuceneTemplateResolver", templateResolvers.get(0).getName());
 
     }
 

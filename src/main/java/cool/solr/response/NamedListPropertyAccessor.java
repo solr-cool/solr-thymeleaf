@@ -1,4 +1,4 @@
-package com.s24.search.solr.response;
+package cool.solr.response;
 
 import java.util.Map;
 

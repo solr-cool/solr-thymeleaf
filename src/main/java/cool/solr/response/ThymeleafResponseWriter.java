@@ -1,9 +1,7 @@
-package com.s24.search.solr.response;
+package cool.solr.response;
 
 import java.io.Writer;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
