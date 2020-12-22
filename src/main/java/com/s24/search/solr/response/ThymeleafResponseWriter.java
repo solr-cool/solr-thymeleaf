@@ -83,8 +83,16 @@ public class ThymeleafResponseWriter
             templateEngine.clearTemplateCache();
         }
 
+        HttpServletRequest httpServletRequest = null;
+
+        if (request.getHttpSolrCall().getReq() != null) {
+            httpServletRequest = request.getHttpSolrCall().getReq();
+        } else if (request.getContext().containsKey("httpRequest")) {
+            // requestDispatcher/requestParsers/@addHttpRequestToContext may be disabled
+            httpServletRequest = (HttpServletRequest) request.getContext().get("httpRequest");
+        }
+
         // Prefill context with some defaults
-        HttpServletRequest httpServletRequest = (HttpServletRequest) request.getContext().get("httpRequest");
         WebContext context = new WebContext(
             httpServletRequest,
             new FakeServletResponse(),
@@ -92,7 +100,7 @@ public class ThymeleafResponseWriter
             locale
         );
         context.setVariable("request", request);
-        context.setVariable("params", toMap(request.getParams().toNamedList()));
+        context.setVariable("params", request.getParams().toNamedList().asShallowMap());
 
         // add core properties
         Properties coreProperties = request.getCore().getResourceLoader().getCoreProperties();
@@ -108,21 +116,13 @@ public class ThymeleafResponseWriter
         context.setVariable("response", rsp);
 
         // let subclasses add context info (if needed)
-        preProcess(context);
+        preProcess(context, request, response);
 
         getEngine().process(templateName, context, writer);
     }
 
-    protected void preProcess(WebContext context) {
+    protected void preProcess(WebContext context, SolrQueryRequest request, SolrQueryResponse response) {
         // hook to customize context, noop by default
-    }
-
-    private static Map<String, String> toMap(NamedList<Object> params) {
-        Map<String, String> map = new HashMap<>();
-        for (int i = 0; i < params.size(); i++) {
-            map.put(params.getName(i), params.getVal(i).toString());
-        }
-        return map;
     }
 
     protected TemplateEngine getEngine() {
