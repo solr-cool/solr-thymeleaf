@@ -61,9 +61,7 @@ public class ThymeleafResponseWriter
         templateResolver.setResourceLoader(core.getResourceLoader());
 
         // Clear all cached templates. There could be a new one and should be loaded on collection reload.
-        if (templateEngine != null) {
-            templateEngine.clearTemplateCache();
-        }
+        getEngine().clearTemplateCache();
     }
 
     @Override
@@ -78,7 +76,7 @@ public class ThymeleafResponseWriter
 
         // When changing the templates we want a cleared cache
         if (request.getParams().getBool("tl.clearCache", false)) {
-            templateEngine.clearTemplateCache();
+            getEngine().clearTemplateCache();
         }
 
         HttpServletRequest httpServletRequest = null;
