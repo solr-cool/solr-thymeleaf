@@ -108,13 +108,13 @@ public class ThymeleafResponseWriter
             }
         }
 
-        // let subclasses add context info (if needed)
-        preProcess(context, request, response);
-        
         SolrResponse rsp = new QueryResponse();
         NamedList<Object> parsedResponse = BinaryResponseWriter.getParsedResponse(request, response);
         rsp.setResponse(parsedResponse);
         context.setVariable("response", rsp);
+
+        // let subclasses add context info (if needed)
+        preProcess(context, request, response);
 
         getEngine().process(templateName, context, writer);
     }
