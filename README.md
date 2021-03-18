@@ -24,8 +24,8 @@ Pass the template to render in the `tl.template` request parameter. You can conf
          <str name="tl.templateMode">XHTML</str>
          <str name="tl.locale">de_de</str>
          <str name="tl.cacheTTLMs">3600000</str>
-         <str name="tl.prefix">.html</str>
-         <str name="tl.suffix">${solr.core.config}/templates/</str>
+         <str name="tl.prefix">${solr.core.config}/templates/</str>
+         <str name="tl.suffix">.html</str>
     </queryResponseWriter>
 
 The template context is prefilled with the current `request`, the request `params` and a solr `response`.
