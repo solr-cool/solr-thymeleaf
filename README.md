@@ -20,7 +20,7 @@ A Solr component to use the [Thymeleaf template engine](http://www.thymeleaf.org
 
 Pass the template to render in the `tl.template` request parameter. You can configure Thymeleaf template resolving:
 
-    <queryResponseWriter name="html" class="com.s24.search.solr.response.ThymeleafResponseWriter">
+    <queryResponseWriter name="html" class="cool.solr.response.ThymeleafResponseWriter">
          <str name="tl.templateMode">XHTML</str>
          <str name="tl.locale">de_de</str>
          <str name="tl.cacheTTLMs">3600000</str>
