@@ -1,6 +1,6 @@
 # solr-thymeleaf
 
-[![travis ci build status](https://travis-ci.org/solr-cool/solr-thymeleaf.png)](https://travis-ci.org/github/solr-cool/solr-thymeleaf)
+[![continuous integration](https://github.com/solr-cool/solr-thymeleaf/actions/workflows/ci.yaml/badge.svg)](https://github.com/solr-cool/solr-thymeleaf/actions/workflows/ci.yaml)
 [![Maven Central](https://img.shields.io/maven-central/v/cool.solr/solr-thymeleaf)](https://search.maven.org/artifact/cool.solr/solr-thymeleaf/)
 
 > ♻️ this is the official and maintained fork of the original [@shopping24](https://github.com/shopping24) repository maintained by [solr.cool](https://solr.cool).
@@ -9,7 +9,7 @@ A Solr component to use the [Thymeleaf template engine](http://www.thymeleaf.org
 
 ## Installing the component
 
-* Place the [`solr-thymeleaf-<VERSION>-jar-with-dependencies.jar`](https://github.com/shopping24/solr-thymeleaf/releases) in the `/lib` 
+* Place the [`solr-thymeleaf-<VERSION>-jar-with-dependencies.jar`](https://github.com/shopping24/solr-thymeleaf/releases) in the `/lib`
   directory of your Solr installation.
 * Configure the component in your `solrconfig.xml`:
 
@@ -37,9 +37,9 @@ This should install the current version into your local repository
     $ ./mvn clean verify
 
 ### Releasing the project to maven central
-    
+
 Define new versions
-    
+
     $ export NEXT_VERSION=<version>
     $ export NEXT_DEVELOPMENT_VERSION=<version>-SNAPSHOT
 
@@ -49,13 +49,13 @@ Then execute the release chain
     $ git commit -a -m "pushes to release version $NEXT_VERSION"
     $ git tag -a v$NEXT_VERSION -m "`curl -s http://whatthecommit.com/index.txt`"
     $ mvn -P release
-    
+
 Then, increment to next development version:
-    
+
     $ mvn org.codehaus.mojo:versions-maven-plugin:2.0:set -DgenerateBackupPoms=false -DnewVersion=$NEXT_DEVELOPMENT_VERSION
     $ git commit -a -m "pushes to development version $NEXT_DEVELOPMENT_VERSION"
     $ git push origin tag v$NEXT_VERSION && git push origin
-    
+
 ## License
 
 This project is licensed under the [Apache License, Version 2](http://www.apache.org/licenses/LICENSE-2.0.html).
