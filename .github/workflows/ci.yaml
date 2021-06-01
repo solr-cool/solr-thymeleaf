@@ -34,4 +34,4 @@ jobs:
       run: mvn --batch-mode --no-transfer-progress install --file pom.xml
 
     - name: Dependecy Analysis
-      run: mvn dependency:tree --file pom.xml -Dverbose
+      run: mvn --batch-mode --no-transfer-progress dependency:tree --file pom.xml -Dverbose
