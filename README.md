@@ -36,26 +36,6 @@ This should install the current version into your local repository
 
     $ ./mvn clean verify
 
-### Releasing the project to maven central
-
-Define new versions
-
-    $ export NEXT_VERSION=<version>
-    $ export NEXT_DEVELOPMENT_VERSION=<version>-SNAPSHOT
-
-Then execute the release chain
-
-    $ mvn org.codehaus.mojo:versions-maven-plugin:2.8.1:set -DgenerateBackupPoms=false -DnewVersion=$NEXT_VERSION
-    $ git commit -a -m "pushes to release version $NEXT_VERSION"
-    $ git tag -a v$NEXT_VERSION -m "`curl -s http://whatthecommit.com/index.txt`"
-    $ mvn -P release
-
-Then, increment to next development version:
-
-    $ mvn org.codehaus.mojo:versions-maven-plugin:2.0:set -DgenerateBackupPoms=false -DnewVersion=$NEXT_DEVELOPMENT_VERSION
-    $ git commit -a -m "pushes to development version $NEXT_DEVELOPMENT_VERSION"
-    $ git push origin tag v$NEXT_VERSION && git push origin
-
 ## License
 
 This project is licensed under the [Apache License, Version 2](http://www.apache.org/licenses/LICENSE-2.0.html).
