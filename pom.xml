@@ -123,7 +123,7 @@
                 <groupId>org.thymeleaf</groupId>
                 <artifactId>thymeleaf</artifactId>
             </exclusion>
-        </exclusions> 
+        </exclusions>
       </dependency>
        <dependency>
            <groupId>org.apache.solr</groupId>
@@ -195,34 +195,6 @@
                                 </goals>
                             </execution>
                         </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>de.jutzig</groupId>
-                        <artifactId>github-release-plugin</artifactId>
-                        <version>1.4.0</version>
-                        <executions>
-                            <execution>
-                                <id>upload-artifacts-2-github</id>
-                                <phase>deploy</phase>
-                                <goals>
-                                    <goal>release</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <description>Release version ${project.version}</description>
-                            <releaseName>${project.version}</releaseName>
-                            <tag>${project.version}</tag>
-                            <fileSets>
-                                <fileSet>
-                                    <directory>${project.build.directory}</directory>
-                                    <includes>
-                                        <include>${project.artifactId}*.jar</include>
-                                        <include>${project.artifactId}*.jar.asc</include>
-                                    </includes>
-                                </fileSet>
-                            </fileSets>
-                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
